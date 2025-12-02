@@ -35,6 +35,15 @@ client/src/simulation/
 3.  **Ver Contexto**: Observa el panel izquierdo ("Active Flow State") para ver cómo cambia el estado interno (`currentFlow`, `step`) en tiempo real.
 4.  **Resetear**: Escribe `RESET` o `MENU` en cualquier momento, o usa el botón "Reset System" en el dashboard.
 
+## 🚀 Despliegue en Vercel
+
+El proyecto está listo para ser desplegado en Vercel como una aplicación estática.
+
+1.  Importa este repositorio en Vercel.
+2.  Vercel detectará automáticamente `Vite`.
+3.  **Importante**: Asegúrate de que la configuración de "Output Directory" sea `dist/public` (o usa el archivo `vercel.json` incluido que ya lo configura).
+4.  Dale a "Deploy".
+
 ## 🏗 Arquitectura de Datos (Schemas)
 
 El sistema utiliza modelos estrictos para garantizar la escalabilidad:
