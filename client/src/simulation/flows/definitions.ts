@@ -22,7 +22,7 @@ export const FLOWS = {
   },
   INFO_LAB: {
     INIT: {
-      message: "📍 *Información del Laboratorio*\n\nSomos un centro de innovación tecnológica enfocado en IA y automatización.\n\n1. Volver al menú",
+      message: "📍 *Información del Laboratorio*\n\nAILucid Studio es un laboratorio digital enfocado en inteligencia artificial, automatización y desarrollo de software.\n\nNuestra misión es construir sistemas inteligentes que impulsen el futuro del trabajo y la creatividad humana.\n\n1. Volver al menú",
       nextStep: "AWAITING_EXIT"
     },
     AWAITING_EXIT: {
@@ -31,13 +31,13 @@ export const FLOWS = {
   },
   ROLES: {
     INIT: {
-      message: "👥 *Roles Disponibles*\n\n- Arquitecto de Software\n- Desarrollador Frontend\n- Especialista en IA\n\n1. Volver al menú",
+      message: "👥 *Roles Disponibles*\n\nActualmente estamos evaluando talento para:\n* Integrador de Sistemas\n* Arquitecto en Notion\n* Community Manager IA\n* Content Automation Specialist (CAS)\n\n1. Volver al menú",
       nextStep: "AWAITING_EXIT"
     }
   },
   SUPPORT: {
     INIT: {
-      message: "🛠 *Soporte*\n\n¿En qué podemos ayudarte? Describe tu problema brevemente.",
+      message: "🛠 *Soporte*\n\nPara soporte general puedes responder: “hablar con soporte”.\nEn esta fase es soporte limitado porque estamos construyendo el sistema interno.",
       nextStep: "AWAITING_ISSUE"
     },
     AWAITING_ISSUE: {
