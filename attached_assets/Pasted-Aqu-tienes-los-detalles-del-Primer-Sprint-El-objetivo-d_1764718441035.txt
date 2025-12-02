@@ -1,0 +1,53 @@
+Aquí tienes los detalles del Primer Sprint.
+El objetivo de este sprint es ver cómo aplicas tu arquitectura a un flujo real dentro del laboratorio y cómo se adapta tu sistema a nuestra estructura interna.
+Objetivo General del Sprint:
+Construir un flujo funcional de WhatsApp, con manejo de contexto, administración de estado y estructura modular, que sirva como base para futuras integraciones con Notion y dashboards internos.
+🧩 Alcance del Sprint
+El sprint incluye cuatro componentes principales:
+1️⃣ Recepción de mensajes entrantes
+Endpoint seguro para webhooks.
+Validación de firma.
+Normalización del mensaje (texto, botón, etc.).
+2️⃣ Menú inicial con tres opciones reales
+El bot debe responder con un menú simple:
+A: Información del laboratorio
+B: Roles disponibles
+C: Soporte
+3️⃣ Manejo de contexto (memoria de 3 pasos mínimo)
+El sistema debe recordar:
+La opción elegida por el usuario
+La etapa del flujo en la que se encuentra
+Variables mínimas para no reiniciar la conversación
+Puedes usar Redis, DB o el mecanismo que prefieras.
+4️⃣ Estructura modular del servidor
+Usando el estilo que ya explicaste:
+Rutas / API → recibir webhooks
+Controladores → interpretar eventos
+Servicios → lógica de negocio
+Flujos → pasos conversacionales
+Utils / Config → constantes, validaciones, DB
+🧪 Entregables del Sprint
+Video corto o captura mostrando el flujo funcional.
+Explicación breve de cómo organizaste el flujo interno.
+Endpoint de prueba para enviar mensajes (puede ser Replit, Render, local ngrok, etc.)
+Menú funcionando con las tres opciones A/B/C.
+Contexto funcionando por lo menos en 3 mensajes consecutivos.
+🎯 Criterios de Éxito
+El sprint se considera exitoso si:
+El bot responde de forma coherente a las 3 opciones.
+Mantiene el contexto sin reiniciar.
+Usa una arquitectura modular (rutas, controladores, servicios, flujos).
+Responde correctamente a mensajes consecutivos.
+El diseño del flujo es escalable para futuras integraciones.
+⏱ Tiempo Estimado
+48 a 72 horas es suficiente.
+Si necesitas más tiempo, me avisas sin problema.
+📌 Notas Importantes
+No necesitas conectar Notion aún.
+No necesitas integrar Facebook ni Twilio en este sprint.
+Este sprint es solo para validar la base del sistema de WhatsApp.
+Una vez finalizado este sprint, pasamos a:
+➡️ Integración con Notion (cuando el arquitecto termine la estructura)
+➡️ Dashboards internos
+➡️ Sistema de usuarios
+➡️ Automatizaciones avanzadas

@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Database, Server, GitBranch, Terminal, RefreshCcw } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface ServerDashboardProps {
   logs: string[];

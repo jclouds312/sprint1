@@ -50,7 +50,7 @@ export function useWhatsAppSimulation() {
     setLogs(prev => [...prev, logResponse]);
 
     // Add bot response to UI
-    if (response.status === 'success') {
+    if (response.status === 'success' && typeof response.message !== 'string') {
       const botMsg = { 
         id: (Date.now() + 1).toString(), 
         text: response.message.text, 
