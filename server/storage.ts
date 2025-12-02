@@ -1,16 +1,25 @@
-import { type User, type InsertUser } from "@shared/schema";
+import { type User, type InsertUser, type UserContextDB, userContexts } from "@shared/schema";
 import { randomUUID } from "crypto";
+import { neon } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/neon-http";
+import { eq, sql } from "drizzle-orm";
 
-// modify the interface with any CRUD methods
-// you might need
+const connectionString = process.env.DATABASE_URL!;
+const client = neon(connectionString);
+const db = drizzle(client);
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  
+  getOrCreateContext(phoneNumber: string): Promise<UserContextDB>;
+  updateContext(phoneNumber: string, updates: Partial<Omit<UserContextDB, 'id' | 'phoneNumber'>>): Promise<UserContextDB>;
+  getAllContexts(): Promise<UserContextDB[]>;
+  resetAllContexts(): Promise<void>;
 }
 
-export class MemStorage implements IStorage {
+export class DatabaseStorage implements IStorage {
   private users: Map<string, User>;
 
   constructor() {
@@ -33,6 +42,43 @@ export class MemStorage implements IStorage {
     this.users.set(id, user);
     return user;
   }
+
+  async getOrCreateContext(phoneNumber: string): Promise<UserContextDB> {
+    const existing = await db.select().from(userContexts).where(eq(userContexts.phoneNumber, phoneNumber)).limit(1);
+    
+    if (existing.length > 0) {
+      return existing[0];
+    }
+
+    const newContext = await db.insert(userContexts).values({
+      phoneNumber,
+      currentFlow: 'WELCOME',
+      step: 'INIT',
+      variables: {},
+    }).returning();
+
+    return newContext[0];
+  }
+
+  async updateContext(phoneNumber: string, updates: Partial<Omit<UserContextDB, 'id' | 'phoneNumber'>>): Promise<UserContextDB> {
+    const updated = await db.update(userContexts)
+      .set({
+        ...updates,
+        lastInteraction: new Date(),
+      })
+      .where(eq(userContexts.phoneNumber, phoneNumber))
+      .returning();
+
+    return updated[0];
+  }
+
+  async getAllContexts(): Promise<UserContextDB[]> {
+    return db.select().from(userContexts);
+  }
+
+  async resetAllContexts(): Promise<void> {
+    await db.delete(userContexts);
+  }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
