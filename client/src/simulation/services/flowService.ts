@@ -45,7 +45,7 @@ export class FlowService {
       } else if (msg === 'B' || msg.includes('ROLES')) {
         await contextStore.updateContext(ctx.phoneNumber, { currentFlow: 'ROLES', step: 'INIT' });
         return { text: FLOWS.ROLES.INIT.message };
-      } else if (msg === 'C' || msg.includes('SOPORTE')) {
+      } else if (msg === 'C' || msg.includes('SOPORTE') || msg.includes('SUPPORT')) {
         await contextStore.updateContext(ctx.phoneNumber, { currentFlow: 'SUPPORT', step: 'INIT' });
         return { text: FLOWS.SUPPORT.INIT.message };
       } else {
