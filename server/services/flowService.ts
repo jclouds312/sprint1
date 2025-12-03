@@ -29,6 +29,7 @@ export class FlowService {
 
   private async handleWelcomeFlow(ctx: UserContextDB, msg: string): Promise<FlowResponse> {
     if (ctx.step === 'INIT') {
+      // First interaction: send welcome message and advance to menu selection
       await storage.updateContext(ctx.phoneNumber, { step: 'AWAITING_MENU_SELECTION' });
       return { text: FLOWS.WELCOME.INIT.message, options: FLOWS.WELCOME.INIT.options };
     }
@@ -69,11 +70,13 @@ export class FlowService {
 
   private async handleSupportFlow(ctx: UserContextDB, msg: string): Promise<FlowResponse> {
     if (ctx.step === 'INIT') {
+      // Show support message and wait for issue description
       await storage.updateContext(ctx.phoneNumber, { step: 'AWAITING_ISSUE' });
       return { text: FLOWS.SUPPORT.INIT.message };
     }
 
     if (ctx.step === 'AWAITING_ISSUE') {
+      // User sent their issue, save it and confirm
       const currentVars = (ctx.variables as Record<string, any>) || {};
       await storage.updateContext(ctx.phoneNumber, { 
         variables: { ...currentVars, lastTicketIssue: msg },
@@ -83,14 +86,18 @@ export class FlowService {
     }
 
     if (ctx.step === 'AWAITING_EXIT') {
-      if (msg === '1' || msg.includes('VOLVER')) {
-        await storage.updateContext(ctx.phoneNumber, { currentFlow: 'WELCOME', step: 'INIT' });
+      if (msg === '1' || msg.includes('VOLVER') || msg.includes('MENU')) {
+        await storage.updateContext(ctx.phoneNumber, { 
+          currentFlow: 'WELCOME', 
+          step: 'INIT',
+          variables: {} // Clear variables when returning to menu
+        });
         return { text: FLOWS.WELCOME.INIT.message, options: FLOWS.WELCOME.INIT.options };
       }
       return { text: "Escribe 1 para volver al menú." };
     }
 
-    return { text: "Error en soporte. Escribe MENU." };
+    return { text: "Error en soporte. Escribe MENU para reiniciar." };
   }
 }
 

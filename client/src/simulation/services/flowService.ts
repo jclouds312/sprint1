@@ -33,7 +33,7 @@ export class FlowService {
 
   private async handleWelcomeFlow(ctx: UserContext, msg: string): Promise<FlowResponse> {
     if (ctx.step === 'INIT') {
-       // Should not happen if initialized correctly, but auto-advance
+       // First interaction: send welcome message and advance to menu selection
        await contextStore.updateContext(ctx.phoneNumber, { step: 'AWAITING_MENU_SELECTION' });
        return { text: FLOWS.WELCOME.INIT.message, options: FLOWS.WELCOME.INIT.options };
     }
@@ -74,17 +74,13 @@ export class FlowService {
 
   private async handleSupportFlow(ctx: UserContext, msg: string): Promise<FlowResponse> {
     if (ctx.step === 'INIT') {
-      // User just entered support, we showed the prompt, now waiting for input
-      // Actually, if we just transitioned, we should be in AWAITING_ISSUE
-      // But for this simulation, let's assume we need to advance manually or the first msg was the transition
+      // Show support message and wait for issue description
       await contextStore.updateContext(ctx.phoneNumber, { step: 'AWAITING_ISSUE' });
-      return { text: FLOWS.SUPPORT.INIT.message }; // Re-send prompt if they type something else? Or accept it?
-      // Let's assume this message IS the issue if they are already in INIT? 
-      // No, usually INIT sends the prompt.
+      return { text: FLOWS.SUPPORT.INIT.message };
     }
 
     if (ctx.step === 'AWAITING_ISSUE') {
-      // Capture the issue (mock variable storage)
+      // User sent their issue, save it and confirm
       await contextStore.updateContext(ctx.phoneNumber, { 
         variables: { ...ctx.variables, lastTicketIssue: msg },
         step: 'AWAITING_EXIT'
@@ -93,14 +89,18 @@ export class FlowService {
     }
 
     if (ctx.step === 'AWAITING_EXIT') {
-       if (msg === '1' || msg.includes('VOLVER')) {
-         await contextStore.updateContext(ctx.phoneNumber, { currentFlow: 'WELCOME', step: 'INIT' });
+       if (msg === '1' || msg.includes('VOLVER') || msg.includes('MENU')) {
+         await contextStore.updateContext(ctx.phoneNumber, { 
+           currentFlow: 'WELCOME', 
+           step: 'INIT',
+           variables: {} // Clear variables when returning to menu
+         });
          return { text: FLOWS.WELCOME.INIT.message, options: FLOWS.WELCOME.INIT.options };
        }
        return { text: "Escribe 1 para volver al menú." };
     }
 
-    return { text: "Error en soporte. Escribe MENU." };
+    return { text: "Error en soporte. Escribe MENU para reiniciar." };
   }
 }
 
