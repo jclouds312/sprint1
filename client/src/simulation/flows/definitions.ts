@@ -11,8 +11,8 @@ export type FlowResponse = {
 export const FLOWS = {
   WELCOME: {
     INIT: {
-      message: "¡Hola! Bienvenido al Laboratorio 🧪.\nSelecciona una opción del menú:",
-      options: ["A: Información del Lab", "B: Roles Disponibles", "C: Soporte"],
+      message: "¡Hola! 👋 Bienvenido al Laboratorio 🧪\n\nSelecciona una opción del menú:\n\nA: Información del Lab\nB: Roles disponibles\nC: Soporte",
+      options: ["A: Información del Lab", "B: Roles disponibles", "C: Soporte"],
       nextStep: "AWAITING_MENU_SELECTION"
     },
     AWAITING_MENU_SELECTION: {
@@ -31,13 +31,13 @@ export const FLOWS = {
   },
   ROLES: {
     INIT: {
-      message: "👥 *Roles Disponibles*\n\nActualmente estamos evaluando talento para:\n* Integrador de Sistemas\n* Arquitecto en Notion\n* Community Manager IA\n* Content Automation Specialist (CAS)\n\n1. Volver al menú",
+      message: "👥 *Roles disponibles*\n\nActualmente estamos evaluando talento para:\n• Integrador de Sistemas\n• Arquitecto en Notion\n• Community Manager IA\n• Content Automation Specialist (CAS)\n\n1. Volver al menú",
       nextStep: "AWAITING_EXIT"
     }
   },
   SUPPORT: {
     INIT: {
-      message: "🛠 *Soporte*\n\nPara soporte general puedes responder: “hablar con soporte”.\nEn esta fase es soporte limitado porque estamos construyendo el sistema interno.",
+      message: "🛠 *Soporte*\n\nPara soporte general puedes responder: \"hablar con soporte\".\nEn esta fase es soporte limitado porque estamos construyendo el sistema interno.",
       nextStep: "AWAITING_ISSUE"
     },
     AWAITING_ISSUE: {
