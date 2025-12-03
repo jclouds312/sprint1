@@ -5,13 +5,19 @@ import { FLOWS, FlowResponse } from '../flows/definitions';
 
 export class FlowService {
   async processMessage(phoneNumber: string, message: string): Promise<FlowResponse> {
-    const context = await contextStore.getContext(phoneNumber);
+    let context = await contextStore.getContext(phoneNumber);
     const normalizedMsg = message.trim().toUpperCase();
 
     // Global Reset Command
     if (normalizedMsg === 'RESET' || normalizedMsg === 'MENU') {
       await contextStore.updateContext(phoneNumber, { currentFlow: 'WELCOME', step: 'INIT' });
       return { text: FLOWS.WELCOME.INIT.message, options: FLOWS.WELCOME.INIT.options };
+    }
+
+    // Force WELCOME flow if context is brand new (just created) and step is INIT
+    if (context.currentFlow === 'WELCOME' && context.step === 'INIT') {
+      // This is the first interaction - show welcome message
+      return this.handleWelcomeFlow(context, normalizedMsg);
     }
 
     // Router Logic based on Current Flow & Step
