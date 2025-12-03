@@ -33,3 +33,25 @@ export const insertUserContextSchema = createInsertSchema(userContexts).omit({
 
 export type InsertUserContext = z.infer<typeof insertUserContextSchema>;
 export type UserContextDB = typeof userContexts.$inferSelect;
+
+export const webhookMessageSchema = z.object({
+  from: z.string(),
+  text: z.object({
+    body: z.string(),
+  }),
+  type: z.string().optional(),
+});
+
+export const webhookPayloadSchema = z.object({
+  object: z.string(),
+  entry: z.array(z.object({
+    changes: z.array(z.object({
+      value: z.object({
+        messages: z.array(webhookMessageSchema).min(1),
+      }),
+    })).min(1),
+  })).min(1),
+});
+
+export type WebhookMessage = z.infer<typeof webhookMessageSchema>;
+export type WebhookPayload = z.infer<typeof webhookPayloadSchema>;

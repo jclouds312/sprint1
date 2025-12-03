@@ -1,19 +1,38 @@
-import type { Express } from "express";
+import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { webhookController } from "./controllers/webhookController";
-import type { WebhookPayload } from "./controllers/webhookController";
 
 export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
   
-  // Webhook endpoint for incoming messages
-  app.post("/api/webhook", async (req, res) => {
+  app.post("/api/webhook", async (req: Request, res: Response) => {
     try {
-      const payload: WebhookPayload = req.body;
-      const response = await webhookController.handleIncomingMessage(payload);
+      const rawBody = JSON.stringify(req.body);
+      const signature = req.headers['x-hub-signature-256'] as string | undefined;
+
+      if (!webhookController.verifySignature(rawBody, signature)) {
+        res.status(401).json({ 
+          status: 'unauthorized', 
+          message: 'Invalid signature' 
+        });
+        return;
+      }
+
+      const validation = webhookController.validatePayload(req.body);
+      
+      if (!validation.success) {
+        res.status(400).json({ 
+          status: 'validation_error', 
+          message: 'Invalid payload structure',
+          errors: validation.errors 
+        });
+        return;
+      }
+
+      const response = await webhookController.handleIncomingMessage(validation.data);
       res.json(response);
     } catch (error) {
       console.error("Webhook error:", error);
@@ -21,8 +40,7 @@ export async function registerRoutes(
     }
   });
 
-  // Get all user contexts (for debugging/dashboard)
-  app.get("/api/contexts", async (req, res) => {
+  app.get("/api/contexts", async (req: Request, res: Response) => {
     try {
       const contexts = await storage.getAllContexts();
       res.json(contexts);
@@ -32,8 +50,7 @@ export async function registerRoutes(
     }
   });
 
-  // Reset all contexts (for testing)
-  app.post("/api/contexts/reset", async (req, res) => {
+  app.post("/api/contexts/reset", async (req: Request, res: Response) => {
     try {
       await storage.resetAllContexts();
       res.json({ success: true });
