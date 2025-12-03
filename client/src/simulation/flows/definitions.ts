@@ -11,8 +11,8 @@ export type FlowResponse = {
 export const FLOWS = {
   WELCOME: {
     INIT: {
-      message: "¡Hola! 👋 Bienvenido al Laboratorio 🧪\n\nSelecciona una opción del menú:\n\nA: Información del Lab\nB: Roles disponibles\nC: Soporte",
-      options: ["A: Información del Lab", "B: Roles disponibles", "C: Soporte"],
+      message: "¡Hola! 👋 Bienvenido al *Laboratorio AILucid Studio* 🧪\n\nSomos un laboratorio digital enfocado en inteligencia artificial, automatización y desarrollo de software.\n\n*Menú Principal:*\n\nA: Información del laboratorio\nB: Roles disponibles\nC: Soporte\n\nPor favor, selecciona una opción.",
+      options: ["A: Información del laboratorio", "B: Roles disponibles", "C: Soporte"],
       nextStep: "AWAITING_MENU_SELECTION"
     },
     AWAITING_MENU_SELECTION: {
@@ -22,7 +22,7 @@ export const FLOWS = {
   },
   INFO_LAB: {
     INIT: {
-      message: "📍 *Información del Laboratorio*\n\nAILucid Studio es un laboratorio digital enfocado en inteligencia artificial, automatización y desarrollo de software.\n\nNuestra misión es construir sistemas inteligentes que impulsen el futuro del trabajo y la creatividad humana.\n\n1. Volver al menú",
+      message: "📍 *Información del laboratorio*\n\n*¿Quiénes somos?*\nAILucid Studio es un laboratorio digital especializado en:\n• Inteligencia Artificial\n• Automatización de procesos\n• Desarrollo de software a medida\n\n*Nuestra misión:*\nConstruir sistemas inteligentes que impulsen el futuro del trabajo y la creatividad humana.\n\n1. Volver al menú",
       nextStep: "AWAITING_EXIT"
     },
     AWAITING_EXIT: {
