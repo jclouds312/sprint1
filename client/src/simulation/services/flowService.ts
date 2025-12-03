@@ -33,12 +33,13 @@ export class FlowService {
 
   private async handleWelcomeFlow(ctx: UserContext, msg: string): Promise<FlowResponse> {
     if (ctx.step === 'INIT') {
-       // First interaction: send welcome message and advance to menu selection
-       await contextStore.updateContext(ctx.phoneNumber, { step: 'AWAITING_MENU_SELECTION' });
-       return { text: FLOWS.WELCOME.INIT.message, options: FLOWS.WELCOME.INIT.options };
+      // First message: just show welcome, don't validate anything yet
+      await contextStore.updateContext(ctx.phoneNumber, { step: 'AWAITING_MENU_SELECTION' });
+      return { text: FLOWS.WELCOME.INIT.message, options: FLOWS.WELCOME.INIT.options };
     }
 
     if (ctx.step === 'AWAITING_MENU_SELECTION') {
+      // Second message onwards: validate A/B/C
       if (msg === 'A' || msg.includes('INFO')) {
         await contextStore.updateContext(ctx.phoneNumber, { currentFlow: 'INFO_LAB', step: 'INIT' });
         return { text: FLOWS.INFO_LAB.INIT.message };
