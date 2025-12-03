@@ -1,3 +1,4 @@
+
 export type FlowResponse = {
   text: string;
   options?: string[];
@@ -8,11 +9,17 @@ export type FlowResponse = {
 export const FLOWS = {
   WELCOME: {
     INIT: {
-      message: "¡Hola! 👋 Bienvenido al *Laboratorio AILucid Studio* 🧪\n\nSomos un laboratorio digital enfocado en inteligencia artificial, automatización y desarrollo de software.\n\n*Menú Principal:*\n\nA: Información del laboratorio\nB: Roles disponibles\nC: Soporte\n\nPor favor, selecciona una opción.",
-      options: ["A: Información del laboratorio", "B: Roles disponibles", "C: Soporte"],
+      message: "¡Hola! 👋 Bienvenido al *Laboratorio AILucid Studio* 🧪\n\nSomos un laboratorio digital enfocado en inteligencia artificial, automatización y desarrollo de software.",
+      nextStep: "AWAITING_MENU_REQUEST"
+    },
+    AWAITING_MENU_REQUEST: {
+      message: "¿Te gustaría ver el menú principal?",
+      options: ["Sí, ver menú", "No, gracias"],
       nextStep: "AWAITING_MENU_SELECTION"
     },
     AWAITING_MENU_SELECTION: {
+      message: "*Menú Principal:*\n\nA: Información del laboratorio\nB: Roles disponibles\nC: Soporte\n\nPor favor, selecciona una opción.",
+      options: ["A: Información del laboratorio", "B: Roles disponibles", "C: Soporte"],
       fallback: "Por favor, responde con A, B o C."
     }
   },
