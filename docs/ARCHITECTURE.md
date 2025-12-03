@@ -74,7 +74,60 @@ type FlowResponse = {
 ## 4. Notas de Implementación
 
 *   **Desacoplamiento**: El `WebhookController` no sabe nada de lógica de negocio, solo normaliza datos.
-*   **Persistencia**: Actualmente en memoria (`Map<string, Context>`). En producción, esto se reemplaza por una llamada a Redis o SQL sin cambiar la interfaz del servicio.
+*   **Persistencia**: Implementada con PostgreSQL usando Drizzle ORM. Los datos persisten entre sesiones.
 *   **Escalabilidad**: Agregar un nuevo flujo solo requiere:
-    1.  Agregarlo en `definitions.ts`.
+    1.  Agregarlo en `server/flows/definitions.ts`.
     2.  Agregar un `case` en `FlowService` para manejar sus transiciones específicas.
+
+## 5. API REST Endpoints
+
+### POST /api/webhook
+Recibe mensajes entrantes en formato Meta WhatsApp Business API.
+
+**Request Body:**
+```json
+{
+  "object": "whatsapp_business_account",
+  "entry": [{
+    "changes": [{
+      "value": {
+        "messages": [{
+          "from": "5215555555555",
+          "text": { "body": "Hola" },
+          "type": "text"
+        }]
+      }
+    }]
+  }]
+}
+```
+
+**Response:**
+```json
+{
+  "status": "success",
+  "to": "5215555555555",
+  "message": {
+    "text": "¡Hola! Bienvenido al Laboratorio...",
+    "options": ["A: Información del Lab", "B: Roles Disponibles", "C: Soporte"]
+  }
+}
+```
+
+### GET /api/contexts
+Obtiene todos los contextos de usuario almacenados (para debugging).
+
+### POST /api/contexts/reset
+Elimina todos los contextos de usuario (para testing).
+
+## 6. Base de Datos
+
+### Tabla: user_contexts
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| id | SERIAL | Primary key |
+| phone_number | TEXT | Identificador único del usuario (WhatsApp) |
+| current_flow | TEXT | Flujo activo (WELCOME, INFO_LAB, ROLES, SUPPORT) |
+| step | TEXT | Paso dentro del flujo |
+| variables | JSONB | Variables dinámicas (ej: lastTicketIssue) |
+| last_interaction | TIMESTAMP | Última interacción para timeout |
